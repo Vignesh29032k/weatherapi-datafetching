@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
-
+import Swal from 'sweetalert2'
 function App() {
   const [city, setCity] = useState('');
   const [weather, setWeather] = useState(null);
@@ -9,7 +9,11 @@ function App() {
 
   const fetchWeather = async () => {
     if(!city.trim()){
-      alert('Please Enter the city name')
+      Swal.fire({
+        icon : 'warning',
+        title : 'Missing City name',
+        text : 'Please enter the city',
+      })
       return;
     }
     try {
@@ -18,10 +22,16 @@ function App() {
       });
       setWeather(response.data);
       setError('');
+      setCity('')
     } catch (err) {
       setWeather(null);
-      setError('City not found');
+      setError('');
       setCity('')
+      Swal.fire({
+        icon : 'error',
+        title : 'City Not Found',
+        text : 'Please enter the valid city',
+      })
     }
   };
 
