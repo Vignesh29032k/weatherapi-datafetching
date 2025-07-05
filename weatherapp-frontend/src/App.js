@@ -6,6 +6,7 @@ function App() {
   const [city, setCity] = useState('');
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const fetchWeather = async () => {
     if(!city.trim()){
@@ -16,13 +17,17 @@ function App() {
       })
       return;
     }
+    if (loading) return;  
+    
+    setLoading(true);  // Allow future calls again
+
     try {
-      const response = await axios.get('http://localhost:8000/api/weather/', {
-        params: { city }
+      const response = await axios.get('http://127.0.0.1:8000/api/weather/', {
+        params: { city },
       });
       setWeather(response.data);
       setError('');
-      setCity('')
+      // setCity('')
     } catch (err) {
       setWeather(null);
       setError('');
@@ -32,6 +37,8 @@ function App() {
         title : 'City Not Found',
         text : 'Please enter the valid city',
       })
+    } finally {
+      setLoading(false);  // Allow future calls again
     }
   };
 
